@@ -79,16 +79,6 @@ class HuggingFaceEmbeddings(BaseModel, Embeddings):
             self.model_name, cache_folder=self.cache_folder, **self.model_kwargs
         )
 
-        if "show_progress_bar" in self.encode_kwargs:
-            warn_deprecated(
-                since="0.2.5",
-                removal="0.4.0",
-                name="encode_kwargs['show_progress_bar']",
-                alternative="show_progress",
-                # message = "Prefer %(alternative)s over %(name)s since %(since)s; %(alternative)s defaults to False"
-            )
-            self.show_progress = self.encode_kwargs.pop("show_progress_bar")
-
     class Config:
         """Configuration for this pydantic object."""
 
@@ -178,6 +168,15 @@ class HuggingFaceInstructEmbeddings(BaseModel, Embeddings):
             )
         except ImportError as e:
             raise ImportError("Dependencies for InstructorEmbedding not found.") from e
+
+        if "show_progress_bar" in self.encode_kwargs:
+            warn_deprecated(
+                since="0.2.5",
+                removal="0.4.0",
+                name="encode_kwargs['show_progress_bar']",
+                alternative="the show_progress method",
+            )
+            self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
     class Config:
         """Configuration for this pydantic object."""
@@ -290,8 +289,18 @@ class HuggingFaceBgeEmbeddings(BaseModel, Embeddings):
         self.client = sentence_transformers.SentenceTransformer(
             self.model_name, cache_folder=self.cache_folder, **self.model_kwargs
         )
+
         if "-zh" in self.model_name:
             self.query_instruction = DEFAULT_QUERY_BGE_INSTRUCTION_ZH
+
+        if "show_progress_bar" in self.encode_kwargs:
+            warn_deprecated(
+                since="0.2.5",
+                removal="0.4.0",
+                name="encode_kwargs['show_progress_bar']",
+                alternative="the show_progress method",
+            )
+            self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
     class Config:
         """Configuration for this pydantic object."""
