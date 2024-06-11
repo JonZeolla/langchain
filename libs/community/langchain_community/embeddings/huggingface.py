@@ -1,3 +1,4 @@
+import warnings
 from typing import Any, Dict, List, Optional
 
 import requests
@@ -176,6 +177,11 @@ class HuggingFaceInstructEmbeddings(BaseModel, Embeddings):
                 name="encode_kwargs['show_progress_bar']",
                 alternative=f"the show_progress method on {self.__class__.__name__}",
             )
+            if "show_progress_bar" in self.encode_kwargs and self.show_progress:
+                warnings.warn(
+                    "Both encode_kwargs['show_progress_bar'] and show_progress are set;"
+                    "show_progress takes precedence"
+                )
             self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
     class Config:
@@ -300,6 +306,11 @@ class HuggingFaceBgeEmbeddings(BaseModel, Embeddings):
                 name="encode_kwargs['show_progress_bar']",
                 alternative=f"the show_progress method on {self.__class__.__name__}",
             )
+            if "show_progress_bar" in self.encode_kwargs and self.show_progress:
+                warnings.warn(
+                    "Both encode_kwargs['show_progress_bar'] and show_progress are set;"
+                    "show_progress takes precedence"
+                )
             self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
     class Config:
@@ -388,7 +399,9 @@ class HuggingFaceInferenceAPIEmbeddings(BaseModel, Embeddings):
         Example:
             .. code-block:: python
 
-                from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+                from langchain_community.embeddings import (
+                    HuggingFaceInferenceAPIEmbeddings,
+                )
 
                 hf_embeddings = HuggingFaceInferenceAPIEmbeddings(
                     api_key="your_api_key",
