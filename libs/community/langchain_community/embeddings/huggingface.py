@@ -174,7 +174,7 @@ class HuggingFaceInstructEmbeddings(BaseModel, Embeddings):
                 since="0.2.5",
                 removal="0.4.0",
                 name="encode_kwargs['show_progress_bar']",
-                alternative="the show_progress method",
+                alternative=f"the show_progress method on {self.__class__.__name__}",
             )
             self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
@@ -298,7 +298,7 @@ class HuggingFaceBgeEmbeddings(BaseModel, Embeddings):
                 since="0.2.5",
                 removal="0.4.0",
                 name="encode_kwargs['show_progress_bar']",
-                alternative="the show_progress method",
+                alternative=f"the show_progress method on {self.__class__.__name__}",
             )
             self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
