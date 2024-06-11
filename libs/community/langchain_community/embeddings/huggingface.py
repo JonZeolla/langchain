@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 import requests
-from langchain_core._api import deprecated
+from langchain_core._api import deprecated, warn_deprecated
 from langchain_core.embeddings import Embeddings
 from langchain_core.pydantic_v1 import BaseModel, Extra, Field, SecretStr
 
@@ -78,6 +78,16 @@ class HuggingFaceEmbeddings(BaseModel, Embeddings):
         self.client = sentence_transformers.SentenceTransformer(
             self.model_name, cache_folder=self.cache_folder, **self.model_kwargs
         )
+
+        if "show_progress_bar" in self.encode_kwargs:
+            warn_deprecated(
+                since="0.2.5",
+                removal="0.4.0",
+                name="encode_kwargs['show_progress_bar']",
+                alternative="show_progress",
+                # message = "Prefer %(alternative)s over %(name)s since %(since)s; %(alternative)s defaults to False"
+            )
+            self.show_progress = self.encode_kwargs.pop("show_progress_bar")
 
     class Config:
         """Configuration for this pydantic object."""
